@@ -14,7 +14,6 @@ which returns a PokerResult as result.
 
 '''
 
-
 class PokerHand():
 
     # Conversion dictionaries
@@ -121,7 +120,7 @@ class PokerHand():
     # Compare this PokerHand with other PokerHand given, returning a PokerResult
     def compare_with(self, other_hand):
 
-        # Debug
+        # Debug comparison
         if(PokerHand._debug_level > 0):
             print("[PokerHand.compare_with] Hand \t[{}] ({}){}compared with  [{}] ({}){}".format(
                 self.hand, self.hand_classification.name,

@@ -33,7 +33,7 @@ Here is the output of the unit tests (with `debug_level` set as 1):
 
 !["Unit Tests"](images/test_results.png)
 
-The `PokerHand` class can be directly imported in your own solution. The `PokerRanking` class has the predefined poker hand classifications and `PokerResult` class is the comparisson result between two hands
+The `PokerHand` class can be directly imported in your own solution. The `PokerRanking` class has the predefined poker hand classifications and `PokerResult` class is the comparison result between two hands
 
 ```python
 from poker_hand import PokerHand, PokerRanking, PokerResult
@@ -50,8 +50,8 @@ A print function was implemented to assist debugging the solution. The "_debug_l
 | _debug_level | Information |
 |---|---|
 | 0 | Debug off |
-| 1 | PokerHand comparisson result|
-| greater or equal 2 | Initialized hand details and classification, and PokerHand comparisson result |
+| 1 | PokerHand comparison result|
+| greater or equal 2 | Initialized hand details and classification, and PokerHand comparison result |
 
 # License 
 
