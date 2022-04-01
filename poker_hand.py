@@ -1,9 +1,20 @@
-from poker_classifications import Result, PokerRanking
+from poker_classifications import PokerResult, PokerRanking
 from collections import Counter
 
 '''
-A class to classify and compare poker hands
+A class to process, classify and compare poker hands.
+The class constructor are initialized with a string of 5 cards, each card has 
+2 digits (value and suit) and are separated by a single space char. The input 
+cards string is converted into a numeric list of cards, which each card is 
+represented by a tuple of (card_value,card_suit), following the conversion 
+dictionaries. The list of card is also classified by the member function
+"classify_hand", accordingly to the Poker Texas Hold 'em rules.
+Two PokerHand objects can be compared by using the member class "compare_with",
+which returns a PokerResult as result.
+
 '''
+
+
 class PokerHand():
 
     # Conversion dictionaries
@@ -28,6 +39,7 @@ class PokerHand():
         if len(hand_arr) != 5:
             raise ValueError("Invalid hand size given: ")
 
+        # Build a list of cards, accordingly class standard
         for h in hand_arr:
             card_value = None
             card_suit = None
@@ -52,7 +64,7 @@ class PokerHand():
         # Sort hand by value and suit, from lowest to highest
         self.hand_cards = sorted(self.hand_cards, key=lambda x: (x[0], x[1]))
 
-        # Classify hand 
+        # Classify hand
         self.classify_hand()
 
         # Debug - Print a detailed report
@@ -106,8 +118,9 @@ class PokerHand():
                 else:
                     self.hand_classification = PokerRanking.HIGH_CARD
 
-
+    # Compare this PokerHand with other PokerHand given, returning a PokerResult
     def compare_with(self, other_hand):
+
         # Debug
         if(PokerHand._debug_level > 0):
             print("[PokerHand.compare_with] Hand \t[{}] ({}){}compared with  [{}] ({}){}".format(
@@ -117,13 +130,13 @@ class PokerHand():
                 " "*(21-len(other_hand.hand_classification.name))), end='')
 
         # Initialize result as TIE
-        result = Result.TIE
+        result = PokerResult.TIE
 
         # Compare classifications of both hands
         if(self.hand_classification > other_hand.hand_classification):
-            result = Result.WIN
+            result = PokerResult.WIN
         elif(self.hand_classification < other_hand.hand_classification):
-            result = Result.LOSS
+            result = PokerResult.LOSS
 
         # If classifications are the same, then try to break tie
         else:
@@ -132,53 +145,53 @@ class PokerHand():
                     or self.hand_classification == PokerRanking.ROYAL_STRAIGHT_FLUSH
                     or self.hand_classification == PokerRanking.STRAIGHT):
                 if(self.hand_cards[-1][0] > other_hand.hand_cards[-1][0]):
-                    result = Result.WIN
+                    result = PokerResult.WIN
                 if(self.hand_cards[-1][0] < other_hand.hand_cards[-1][0]):
-                    result = Result.LOSS
+                    result = PokerResult.LOSS
 
             elif (self.hand_classification == PokerRanking.TWO_PAIR):
                 # Compare the first highest pair
                 if(self.hand_cards_counter[0][0] > other_hand.hand_cards_counter[0][0]):
-                    result = Result.WIN
+                    result = PokerResult.WIN
                 elif(self.hand_cards_counter[0][0] < other_hand.hand_cards_counter[0][0]):
-                    result = Result.LOSS
+                    result = PokerResult.LOSS
                 else:
                     # Compare the second highest pair
                     if(self.hand_cards_counter[1][0] > other_hand.hand_cards_counter[1][0]):
-                        result = Result.WIN
+                        result = PokerResult.WIN
                     elif(self.hand_cards_counter[1][0] < other_hand.hand_cards_counter[1][0]):
-                        result = Result.LOSS
+                        result = PokerResult.LOSS
                     else:
                         # Compare the fifth card
                         if(self.hand_cards_counter[2][0] > other_hand.hand_cards_counter[2][0]):
-                            result = Result.WIN
+                            result = PokerResult.WIN
                         elif(self.hand_cards_counter[2][0] < other_hand.hand_cards_counter[2][0]):
-                            result = Result.LOSS
+                            result = PokerResult.LOSS
 
             elif (self.hand_classification == PokerRanking.ONE_PAIR):
                 # Compare pairs
                 if(self.hand_cards_counter[0][0] > other_hand.hand_cards_counter[0][0]):
-                    result = Result.WIN
+                    result = PokerResult.WIN
                 elif(self.hand_cards_counter[0][0] < other_hand.hand_cards_counter[0][0]):
-                    result = Result.LOSS
+                    result = PokerResult.LOSS
                 else:
                     # As pairs are the same, then look for the highest card of the 3 cards left, compared one to one on a ordered sequence
                     for i in range(1, 4):
                         if(self.hand_cards_counter[i][0] > other_hand.hand_cards_counter[i][0]):
-                            result = Result.WIN
+                            result = PokerResult.WIN
                             break
                         elif(self.hand_cards_counter[i][0] < other_hand.hand_cards_counter[i][0]):
-                            result = Result.LOSS
+                            result = PokerResult.LOSS
                             break
 
             elif (self.hand_classification == PokerRanking.HIGH_CARD):
                 # Look for the highest card of both hands, ordered by the highest value and checked one by one on sequence, skipping when both have same value
                 for i in range(0, 5):
                     if(self.hand_cards_counter[i][0] > other_hand.hand_cards_counter[i][0]):
-                        result = Result.WIN
+                        result = PokerResult.WIN
                         break
                     elif(self.hand_cards_counter[i][0] < other_hand.hand_cards_counter[i][0]):
-                        result = Result.LOSS
+                        result = PokerResult.LOSS
                         break
 
             # Four of a kind: Compare the value of both hand, can't be the same value
@@ -187,9 +200,9 @@ class PokerHand():
             # Three of a kind: Compare the value of the tree of a kind on both hand, can't be the same value
             else:
                 if(self.hand_cards_counter[0][0] > other_hand.hand_cards_counter[0][0]):
-                    result = Result.WIN
+                    result = PokerResult.WIN
                 else:
-                    result = Result.LOSS
+                    result = PokerResult.LOSS
 
         # Debug result
         if(PokerHand._debug_level > 0):
@@ -197,9 +210,9 @@ class PokerHand():
 
         return result
 
-
     # Print a detailed report of the processed poker hand given
     def print_details(self):
+
         # Auxiliar formatting Print vars
         print_header = "[PokerHand.print_details]"
         print_header_tab = " "*len(print_header)
