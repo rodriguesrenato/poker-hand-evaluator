@@ -1,7 +1,7 @@
 from enum import Enum, IntEnum, auto
 
 
-class Result(Enum):
+class PokerResult(Enum):
     LOSS = 0
     WIN = 1
     TIE = 2
