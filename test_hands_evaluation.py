@@ -1,10 +1,16 @@
 import unittest
-import argparse
 from poker_hand import PokerHand, PokerRanking, PokerResult
+
+# Define the desired debugging level of PokerHand
+#   0 : No debug output
+#   1 : Compare hands result
+#   2 : Compare hands result and hand initialization info
+DEBUG_LEVEL = 1
 
 class TestMethods(unittest.TestCase):
     # Hand classification test
     def test_classify_hand(self):
+        PokerHand._debug_level = DEBUG_LEVEL
         self.assertTrue(
             PokerHand("AC KC QC JC TC").hand_classification == PokerRanking.ROYAL_STRAIGHT_FLUSH)
         self.assertTrue(
@@ -28,6 +34,7 @@ class TestMethods(unittest.TestCase):
 
     # Hands comparison tests
     def test_compare_hands(self):
+        PokerHand._debug_level = DEBUG_LEVEL
         self.assertTrue(PokerHand("TC TH 5C 5H KH").compare_with(
             PokerHand("TC TH 5C 5H KH")) == PokerResult.TIE)
         self.assertTrue(PokerHand("TC TH 5C 5H KH").compare_with(
@@ -83,7 +90,5 @@ class TestMethods(unittest.TestCase):
         self.assertTrue(PokerHand("TS TH TD JH JD").compare_with(
             PokerHand("JH JD TH TC 4C")) == PokerResult.WIN)
 
-
 if __name__ == '__main__':
-    PokerHand._debug_level = 1
     unittest.main()
